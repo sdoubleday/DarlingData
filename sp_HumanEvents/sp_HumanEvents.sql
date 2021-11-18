@@ -1703,11 +1703,11 @@ SET @session_sql +=
       ADD EVENT sqlserver.sp_statement_completed 
         (SET collect_object_name = 1, collect_statement = 1
          ACTION(sqlserver.database_name, sqlserver.sql_text, sqlserver.plan_handle, sqlserver.query_hash_signed, sqlserver.query_plan_hash_signed) 
-         WHERE ( ' + @session_filter + N' )),
+         WHERE ( ' + @session_filter + N' )),' + CASE WHEN @object_name <> N'' THEN N'' ELSE N'
       ADD EVENT sqlserver.sql_statement_completed 
         (SET collect_statement = 1
          ACTION(sqlserver.database_name, sqlserver.sql_text, sqlserver.plan_handle, sqlserver.query_hash_signed, sqlserver.query_plan_hash_signed)
-         WHERE ( ' + @session_filter_statement_completed + N' )),
+         WHERE ( ' + @session_filter_statement_completed + N' )),' END + N'
       ADD EVENT sqlserver.query_post_execution_showplan
         (
          ACTION(sqlserver.database_name, sqlserver.sql_text, sqlserver.plan_handle, sqlserver.query_hash_signed, sqlserver.query_plan_hash_signed)
